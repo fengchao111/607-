@@ -128,7 +128,7 @@
                             </a>
                         </li>
                         <li class="y_css" id="xx8">
-                            <a href="/play/showplay" target="mainFrame"><span></span>
+                            <a href="/ticket/searchbySales" target="mainFrame"><span></span>
                                 <p class="icon_10">
                                     管理员退票
                                 </p>

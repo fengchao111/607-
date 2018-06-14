@@ -140,49 +140,45 @@
 <div class="mian_top_01">
     <div class="mian_top_r"></div>
     <div class="mian_top_l"></div>
-    <div class="mian_top_c">
-        <ul>
-            <li><a href="/seat/seatshow">
-                <p>
-                    座位一览</p>
-            </a></li>
 
-        </ul>
-    </div>
     <%
         List<Studio> lists = (List<Studio>)request.getAttribute("list");
         List <Play> list1 = (List<Play>)request.getAttribute("play");
         List<Schedule> list2= (List<Schedule>)request.getAttribute("schedule");
     %>
 
-    <form action="/ticket/Seat" method="post">
+    <form action="/ticket/Seats" method="post">
     <div class="mian_b">
         <div class="mian_b1">
             &nbsp;
             &nbsp;
-            <select name="studioid">
-                <option value=""></option>
-                <%
-                    for(Studio list : lists){
-                %>
-                <option value="<%=list.getStudio_id()%>"><%=list.getStudio_name()%></option>
-                <% } %>
-            </select>
-
-            <select name="studioid">
+            <%--<select name="studioid">--%>
+                <%--<option value=""></option>--%>
+                <%--<%--%>
+                    <%--for(Studio list : lists){--%>
+                <%--%>--%>
+                <%--<option value="<%=list.getStudio_id()%>"><%=list.getStudio_name()%></option>--%>
+                <%--<% } %>--%>
+            <%--</select>--%>
+            <label>选择影片:</label>
+            <select name="playid">
                 <option value=""></option>
                 <%
                     for(Play list : list1){
                 %>
                 <option value="<%=list.getPlay_id()%>"><%=list.getPlay_name()%></option>
                 <% } %>
+
             </select>
 
+            <label>选择时间:</label>
+            <select name="scheduleid">
 
-            <select name="studioid">
                 <option value=""></option>
                 <%
+
                     for(Schedule list : list2){
+
                 %>
                 <option value="<%=list.getSched_id()%>"><%=list.getSched_time()%></option>
                 <% } %>
@@ -195,7 +191,7 @@
             <input type="submit" value="购票"　id="sbutton"/>
 
             <div>
-                <input>
+
 
             </div>
 

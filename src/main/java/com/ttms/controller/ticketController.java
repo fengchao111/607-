@@ -38,33 +38,45 @@ public class ticketController {
     SaleItemService saleItemService;
     @Autowired
     User_saleService user_saleService;
+    @Autowired
+    EmployeeService employeeService;
+
+
 
     @RequestMapping("/Seat")
     public ModelAndView seatShowPage(HttpServletRequest request) {
 
-//            Sale sale = new Sale();
-//            sale.setEmp_id(12);
-//            sale.setSale_time("2016-1-1");
-//            saleService.insertSale(sale);
-//
-//             Ticket ticket = new Ticket();
-//
-//             ticket.setSched_id(1);
-//             ticket.setSeat_id(11);
-//             ticket.setTicket_price(111);
-//             ticket.setTicket_locked_time("2016-10-10");
-//             ticket.setTicket_status(1);
-//
-//             ticketService.insertTicket(ticket);
-//
         List<Studio> list = studioService.selectStudio();
         List<Play> playList = playService.selectPlay();
         List<Schedule> scheduleList = scheduleService.selectSchedule();
+
 
         request.setAttribute("list", list);
         request.setAttribute("play", playList);
         request.setAttribute("schedule", scheduleList);
         return new ModelAndView("/manager/ticket/Seat");
+
+    }
+    @RequestMapping("/Seats")
+    public ModelAndView seatsShowPage(HttpServletRequest request) {
+
+//        String studio_id = request.getParameter("studioid");
+
+        String sched_id = request.getParameter("scheduleid");
+//        int id = Integer.parseInt(studio_id);
+        int sch_id = Integer.parseInt(sched_id);
+        Schedule schedule = scheduleService.selectScheduleBySched_id(sch_id);
+        int id = schedule.getStudio_id();
+        Studio studio = studioService.selectStudioByStudio_id(id);
+        List<Studio> list = studioService.selectSpecialStudio(id);
+        int[][] seat_statu = seatService.selectSeatByStudio_id(id);
+
+
+        request.setAttribute("list", list);
+        request.setAttribute("studio", studio);
+        request.setAttribute("seat_statu", seat_statu);
+        request.setAttribute("schedule", schedule);
+        return new ModelAndView("/manager/ticket/Seats");
 
     }
 
@@ -189,7 +201,7 @@ public class ticketController {
                 if (sale_item == null) {          //  false
 
                     Sale sale = new Sale();
-
+                    System.out.println("----------------------"+request.getSession().getAttribute("names"));
                     sale.setEmp_id((Integer)(request.getSession().getAttribute("names")));
                     sale.setSale_payment(ticket.getTicket_price());
                     sale.setSale_status(1);
@@ -233,7 +245,108 @@ public class ticketController {
 
 
     }
+    @RequestMapping("/Saleitems")
+    public ModelAndView Salewithsomethings(HttpServletRequest request) {
 
+        HashMap<String,Integer> map = new HashMap<String, Integer>();
+        String datas = request.getParameter("data");
+        JSONObject object = new JSONObject(datas);
+        String data = object.getString("orders");
+        System.out.println(data);
+        int studio_id = object.getInt("studio");
+        int sched_id = object.getInt("sched");
+        String[] positoion = data.split("\\|");
+        for(int i=0; i<positoion.length; i++) {
+
+            if (map.containsKey(positoion[i])) {
+
+                int j = map.get(positoion[i]);
+                j++;
+                map.put(positoion[i], j);
+
+            }else{
+
+                map.put(positoion[i], 1);
+            }
+        }
+
+
+        for(Map.Entry<String, Integer>  entry : map.entrySet()) {
+
+            if (entry.getValue() % 2 == 0) {
+
+                continue;
+
+            } else {
+
+                String letter1 = entry.getKey();
+                String[] letter = letter1.split(",");
+                int row = Integer.parseInt(letter[0]);
+                int col = Integer.parseInt(letter[1]);
+                System.out.println("rowaaaaaa"+row);
+                System.out.println("colaaaaa"+col);
+                Studio name = studioService.selectStudioByStudio_id(studio_id);
+                Seat seat = seatService.selectSeatByPosition2(name.getStudio_name(), row, col);
+
+                int ticket_id;
+
+                Sale_item saleItem = new Sale_item();
+                Ticket ticket = new Ticket();
+                Sale_item sale_item = new Sale_item();
+                ticket.setSeat_id(seat.getSeat_id());
+                ticket.setSched_id(sched_id);
+                ticket = ticketService.SearchTicket(ticket);
+                System.out.println("sale");
+
+                sale_item = saleItemService.SearchSaleItem(ticket);
+                if (sale_item == null) {          //  false
+
+                    Sale sale = new Sale();
+                    System.out.println("----------------------"+request.getSession().getAttribute("names"));
+                    Employee employee = employeeService.selectEmployeeByEmp_no((String)request.getSession().getAttribute("names"));
+                    sale.setEmp_id( employee.getEmp_id());
+                    sale.setSale_payment(ticket.getTicket_price());
+                    sale.setSale_status(1);
+
+
+                    saleService.insertSale(sale);
+
+                    Sale_item sale_item1 = new Sale_item();
+                    sale_item1.setSale_ID(sale.getSale_ID());
+                    sale_item1.setTicket_id(ticket.getTicket_id());
+
+                    saleItemService.insertSaleItem(sale_item1);
+
+
+                } else {
+
+                    Sale sale = new Sale();
+                    Ticket ticketn = new Ticket();
+
+
+
+                    sale = saleItemService.selectSale_IDBySale_item_id(sale_item);
+                    Employee employee = employeeService.selectEmployeeByEmp_no((String)request.getSession().getAttribute("names"));
+                    sale.setEmp_id(employee.getEmp_id());
+                    sale.setSale_status(1);
+
+                    ticketn    = saleItemService.Searchbysaleitemid(sale_item);
+
+                    ticketn.setTicket_status(1);
+
+                    //                saleService.updateUser(sale);
+                    System.out.println("sale_id"+sale.getEmp_id()+":  "+sale.getSale_status());
+                    saleService.updateStatus(sale);
+                    ticketService.updateTicketStatus(ticketn);
+                }
+
+
+            }
+        }
+        return new ModelAndView("");
+
+
+    }
     @RequestMapping("/backticket")
     public ModelAndView backticket(HttpServletRequest request) {
 
@@ -271,6 +384,44 @@ public class ticketController {
      return new ModelAndView("/ordinary/order");
    //     return new ModelAndView("");
     }
+    @RequestMapping("/backtickets")
+    public ModelAndView backtickets(HttpServletRequest request) {
+
+        Sale sale = new Sale();
+        Ticket ticket = new Ticket();
+        Seat seat;
+        Sale_item sale_item  = new Sale_item();
+
+
+
+        sale.setSale_ID((Integer.parseInt(request.getParameter("sale"))));
+        sale.setSale_status(0);
+        sale.setEmp_id(0);
+
+        sale_item = saleService.Searchbysaleid(sale);
+
+        ticket    = saleItemService.Searchbysaleitemid(sale_item);
+
+        ticket.setTicket_status(0);
+
+        saleService.updateStatus(sale);
+
+        ticketService.updateTicketStatus(ticket);
+        seat      = ticketService.serchforseat(ticket);
+        seat.setSeat_status(0);
+        seatService.updateSeatStatus(seat);
+
+
+        List<User_sale>  user_sales;
+        User_sale user_sale  = new User_sale();
+        Employee employee = employeeService.selectEmployeeByEmp_no((String)request.getSession().getAttribute("names"));
+        user_sale.setUser_id(employee.getEmp_id());
+        user_sales = user_saleService.selectUser_sale(user_sale);
+
+        request.setAttribute("ticketdetail", user_sales);
+        return new ModelAndView("/manager/ticket/order");
+        //     return new ModelAndView("");
+    }
 
     @RequestMapping("/searchbySale")
     public ModelAndView searchbySale(HttpServletRequest request) {
@@ -281,14 +432,33 @@ public class ticketController {
         user_sale.setUser_id((Integer) request.getSession().getAttribute("names"));
         user_sales = user_saleService.selectUser_sale(user_sale);
 
-        for (User_sale u :user_sales
-             ) {
+        for (User_sale u :user_sales) {
             System.out.println(u.getCol()+"    "+u.getRow());
         }
 
 
         request.setAttribute("ticketdetail", user_sales);
         return new ModelAndView("/ordinary/order");
+
+    }
+    @RequestMapping("/searchbySales")
+    public ModelAndView searchbySales(HttpServletRequest request) {
+
+        System.out.println("dijici");
+        List<User_sale>  user_sales;
+        User_sale user_sale  = new User_sale();
+        Employee employee = employeeService.selectEmployeeByEmp_no((String)request.getSession().getAttribute("names"));
+        user_sale.setUser_id(employee.getEmp_id());
+        user_sales = user_saleService.selectUser_sale(user_sale);
+
+        for (User_sale u :user_sales
+                ) {
+            System.out.println(u.getCol()+"    "+u.getRow());
+        }
+
+
+        request.setAttribute("ticketdetail", user_sales);
+        return new ModelAndView("/manager/ticket/order");
 
     }
 

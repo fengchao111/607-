@@ -483,23 +483,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </style>
 </head>
 <body>
+<%String name=session.getAttribute("user_no").toString();%>
 <div class="container">
     <%--<div class="container_wrap">--%>
         <div class="header_top">
             <div class="col-sm-3 logo"><a href="../show.jsp"><img src="" alt=""/></a></div>
             <div class="col-sm-6 nav">
                 <ul class="ulul">
-                    <a href=""><li>首页</li></a>
+                    <a href="/play/showAllPlayIndex"><li>首页</li></a>
                     <a href="#tt"><li>影片</li></a>
                     <!-- a href="single.html"><li>信息</li></a> -->
                     <a href="/ticket/searchbySale"><li>订单</li></a>
                 </ul>
             </div>
-            <div class="col-sm-3 header_right">
-                <ul class="header_right_box">
-                    <li><img src="" alt=""/></li>
-                </ul>
-            </div>
+            <p class="right_02">
+                <span>您好，<%=name%>，欢迎登录！</span></p>
         </div>
 
 
@@ -542,27 +540,28 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                                 if(seat_statu[i][j] == 0){
 
                                             %>
-                                            <span class="myspan"><span class="seet0" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)"></span></span>
+                                            <span class="myspan"><span class="seet0" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>,<%=schedule.getSched_ticket_price()%>)"></span></span>
+
 
                                             <%
                                             }
                                             else if(seat_statu[i][j] == 1){
 
                                             %>
-                                            <span class="myspan"><span class="seet1" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)"></span></span>
-                                            <%
-                                            }
-                                            else if(seat_statu[i][j] == -1){
+                                            <span class="myspan"><span class="seet1"></span></span>                                       <%
+                                        }
+                                        else if(seat_statu[i][j] == -1){
 
 
-                                            %>
-                                            <span class="myspan"><span class="seet2" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)"></span></span>
+                                        %>
+                                            <span class="myspan"><span class="seet2"></span></span>
                                             <%
 
                                             }
                                             else{
                                             %>
-                                            <span class="myspan"><span class="seet3" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)"></span></span>
+                                            <span class="myspan"><span class="seet3"></span></span>
+
 
                                             <%
                                                     }
@@ -612,7 +611,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <input type="text">
             </div>
             <div class="buy">
-                <label>票价:58元</label></br>
+                <label>票价:<%=schedule.getSched_ticket_price()%>元</label></br>
                 <label class="Price">共计:0元</label></br>
                 <a href="#" onclick="sendResult(<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)">提交订单</a>
             </div>

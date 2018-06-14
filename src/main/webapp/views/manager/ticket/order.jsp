@@ -7,7 +7,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>607影院</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="Movie_store Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
@@ -114,24 +114,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     List<User_sale> lists = (List<User_sale>)request.getAttribute("ticketdetail");
 
 %>
-<%String name=session.getAttribute("user_no").toString();%>
 <body>
-<div class="container">
-    <div class="container_wrap">
-        <div class="header_top">
-            <div class="col-sm-3 logo"><a href="index.html"><img src="" alt=""/></a></div>
-            <div class="col-sm-6 nav">
-                <ul class="ulul">
-                    <a href="/play/showAllPlayIndex"><li>首页</li></a>
-                    <a href="#tt"><li>影片</li></a>
-                    <!--  <a href="single.html"><li>信息</li></a> -->
-                    <a href="/ticket/searchbySale"><li>订单</li></a>
-                </ul>
-            </div>
-            <p class="right_02">
-                <span>您好，<%=name%>，欢迎登录！</span></p>
-            <div class="clearfix"> </div>
-        </div>
+
+
         <div class="content">
             <div class="movie_top">
 
@@ -151,7 +136,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <td><lable><%=list.getSced_time().substring(0,16)%></lable></td>
                         <td><lable><%=list.getStudio_name()%>号厅 <%=list.getRow()%>排<%=list.getCol()%>列</lable></td>
                         <td><lable><%=list.getPrices()%></lable></td>
-                        <td><lable><a href="/ticket/backticket?sale=<%=list.getSale_id()%>">退票</a></lable></td>
+                        <td><lable><a href="/ticket/backtickets?sale=<%=list.getSale_id()%>">退票</a></lable></td>
                     </tr>
                     <%
                         }
@@ -162,7 +147,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <div class="clearfix"> </div>
             </div>
         </div>
-    </div>
-</div>
+
+
 </body>
 </html>

@@ -540,27 +540,28 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                                 if(seat_statu[i][j] == 0){
 
                                             %>
-                                            <span class="myspan"><span class="seet0" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)"></span></span>
+                                            <span class="myspan"><span class="seet0" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>,<%=schedule.getSched_ticket_price()%>)"></span></span>
+
 
                                             <%
                                             }
                                             else if(seat_statu[i][j] == 1){
 
                                             %>
-                                            <span class="myspan"><span class="seet1" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)"></span></span>
-                                            <%
-                                            }
-                                            else if(seat_statu[i][j] == -1){
+                                            <span class="myspan"><span class="seet1"></span></span>                                       <%
+                                        }
+                                        else if(seat_statu[i][j] == -1){
 
 
-                                            %>
-                                            <span class="myspan"><span class="seet2" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)"></span></span>
+                                        %>
+                                            <span class="myspan"><span class="seet2"></span></span>
                                             <%
 
                                             }
                                             else{
                                             %>
-                                            <span class="myspan"><span class="seet3" onclick="test1(this,<%=i%>,<%=j%>,<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)"></span></span>
+                                            <span class="myspan"><span class="seet3"></span></span>
+
 
                                             <%
                                                     }
@@ -610,7 +611,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <input type="text">
             </div>
             <div class="buy">
-                <label>票价:58元</label></br>
+                <label>票价:<%=schedule.getSched_ticket_price()%>元</label></br>
                 <label class="Price">共计:0元</label></br>
                 <a href="#" onclick="sendResult(<%=studio.getStudio_id()%>,<%=schedule.getSched_id()%>)">提交订单</a>
             </div>
