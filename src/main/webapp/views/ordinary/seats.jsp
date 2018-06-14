@@ -483,23 +483,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </style>
 </head>
 <body>
+<%String name=session.getAttribute("user_no").toString();%>
 <div class="container">
     <%--<div class="container_wrap">--%>
         <div class="header_top">
             <div class="col-sm-3 logo"><a href="../show.jsp"><img src="" alt=""/></a></div>
             <div class="col-sm-6 nav">
                 <ul class="ulul">
-                    <a href=""><li>首页</li></a>
+                    <a href="/play/showAllPlayIndex"><li>首页</li></a>
                     <a href="#tt"><li>影片</li></a>
                     <!-- a href="single.html"><li>信息</li></a> -->
                     <a href="/ticket/searchbySale"><li>订单</li></a>
                 </ul>
             </div>
-            <div class="col-sm-3 header_right">
-                <ul class="header_right_box">
-                    <li><img src="" alt=""/></li>
-                </ul>
-            </div>
+            <p class="right_02">
+                <span>您好，<%=name%>，欢迎登录！</span></p>
         </div>
 
 

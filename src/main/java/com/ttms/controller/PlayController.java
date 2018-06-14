@@ -2,6 +2,7 @@ package com.ttms.controller;
 
 import com.ttms.entity.*;
 import com.ttms.entity.Schedule;
+import com.ttms.service.EmployeeService;
 import com.ttms.service.PageService;
 import com.ttms.service.PlayService;
 import com.ttms.service.ScheduleService;
@@ -26,10 +27,23 @@ public class PlayController{
     PageService pageService;
     @Autowired
     ScheduleService scheduleService;
+    @Autowired
+    EmployeeService employeeService;
 
     private static final long serialVersionUID = 1L;
 
+    @RequestMapping("/showAllPlayIndex")
+    public ModelAndView getIndexInfo(HttpServletRequest request){
+        List<Play> playList  =playService.selectPlay();
+        String emp_no=String.valueOf(request.getSession().getAttribute("names"));
+        int emp=Integer.valueOf(emp_no);
+        System.out.println(emp_no);
+        Employee employee = employeeService.selectEmployeeByEmp_id(emp);
 
+        request.setAttribute("play",playList);
+        request.setAttribute("employee", employee);
+        return new ModelAndView("/ordinary/shows");
+    }
     @RequestMapping("/showplay")
     public ModelAndView fileShowPage(HttpServletRequest request){
 
@@ -71,13 +85,13 @@ public class PlayController{
 
         Play plays;
         List<ScheduleDetail> scheduleDetailList = new ArrayList<ScheduleDetail>();
-        ScheduleDetail scheduleDetail = new ScheduleDetail();
+
         String play_id = request.getParameter("play");
         int play = Integer.parseInt(play_id);
         plays = playService.selectPlayByPlay_id(play);
         List<Schedule> scheds = scheduleService.selectScheduleByPlay_id(play);
         for(int i=0;i<scheds.size();i++){
-
+            ScheduleDetail scheduleDetail = new ScheduleDetail();
             Studio studio = scheduleService.searchbyscid(scheds.get(i));
             plays = scheduleService.searchforplay(scheds.get(i));
             scheduleDetail.setPlay_name(plays.getPlay_name());

@@ -45,11 +45,12 @@ public class UserController {
             List<Play> playList  =playService.selectPlay();
             Employee employee = employeeService.selectEmployeeByEmp_no(emp_no);
             int employee_id = employee.getEmp_id();
-
+            String user_no = employee.getEmp_no();;
             request.setAttribute("play",playList);
             request.getSession().setAttribute("login", "yes");
             request.getSession().setAttribute("a", "ok");
             request.getSession().setAttribute("names", employee_id);
+            request.getSession().setAttribute("user_no", user_no);
             request.setAttribute("employee", employee);
             page = "/ordinary/shows";
 
