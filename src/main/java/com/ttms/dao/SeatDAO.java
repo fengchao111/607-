@@ -1,6 +1,7 @@
 package com.ttms.dao;
 
 import com.ttms.entity.Seat;
+import com.ttms.entity.SeatBean;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +28,5 @@ public interface SeatDAO {
                                      @Param(value = "seat_column") int seat_column);
 
 
-
+    void updteSeatList(SeatBean seatBean);
 }

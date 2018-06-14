@@ -1,7 +1,12 @@
-<%@ page import="java.util.List" %>
 <%@ page import="com.ttms.entity.Studio" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
+<%@ page import="java.util.List" %>
+<%@ page import="com.ttms.entity.Page" %><%--
+  Created by IntelliJ IDEA.
+  User: 刘
+  Date: 2018/6/11
+  Time: 10:34
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE>
 <html>
@@ -14,6 +19,15 @@
         addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
         function hideURLbar(){ window.scrollTo(0,1); }
     </script>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <style type="text/css">
 
@@ -129,6 +143,18 @@
             font-family: "微软雅黑";
             color: #AAA;
         }
+        .pagenum a{
+            display: inline-block;
+            height: 22px;
+            margin:0 2px;
+            padding: 0 8px;
+            border:solid 1px #dbe5ee;
+            border-radius: 2px;
+            background: #fff;
+            color: #333;
+            font:normal 12px Arial, Helvetica,Sans-Serif;
+            cursor: pointer;
+        }
 
     </style>
 
@@ -137,102 +163,87 @@
 <div class="mian_top_01">
     <div class="mian_top_r"></div>
     <div class="mian_top_l"></div>
-    <div class="mian_top_c">
-        <ul>
-            <li><a href="/seat/seatshow">
-                <p>
-                    座位一览</p>
-            </a></li>
-            <li><a href="/seat/tochangeseat">
-                <p>
-                    修改座位</p>
-            </a></li>
-            <li><a href="/seat/todelseat">
-                <p>
-                    删除座位</p>
-            </a></li>
-        </ul>
-    </div>
-    <%
-        List<Studio> lists = (List<Studio>)request.getAttribute("list");
-    %>
-    <form action="/seat/seatsshow" method="post">
-    <div class="mian_b">
-        <div class="mian_b1">
-            &nbsp;
-            &nbsp;
-            <select name="studioid">
-                <option value=""></option>
-                <%
-                    for(Studio list : lists){
-                %>
-                <option value="<%=list.getStudio_id()%>"><%=list.getStudio_name()%></option>
+    <div class="studio_list">
+        <table class="table table-hover">
+            <tr>
+                <td>影厅名称</td>
+                <td>座位行数</td>
+                <td>座位列数</td>
+                <td>介绍</td>
+                <td>状态</td>
+            </tr>
+            <%
+                List<Studio> lists= (List<Studio>)request.getAttribute("list");
+                for(Studio list : lists){
+            %>
+            <tr>
+                <td>
+                    <a href="/seat/seat_detail?studioId=<%=list.getStudio_id()%>&&row=<%=list.getStudio_row_count()%>&&col=<%=list.getStudio_col_count()%>"><%=list.getStudio_name()%></a>
+                </td>
+                <td><%=list.getStudio_row_count()%></td>
+                <td><%=list.getStudio_col_count()%></td>
+                <td><%=list.getStudio_introduction()%></td>
+                <td><%=list.getStudio_flag()%></td>
+            </tr>
+            <% } %>
+        </table>
+        <div>
+
+            <%
+                Page pages = (Page)request.getAttribute("pages");
+                int pagenow = pages.getPageNow();
+            %>
+
+            <div id="pagenum" class="pagenum">
+
+
+                <strong style="color:black;padding-right: 8px;">第<%=pagenow%>页</strong>
+
+                <a href="/seat/seatshow?pageNow=1">首页</a>
+
+                <% if(pagenow - 1 > 0){ %>
+
+                <a href="/seat/seatshow?pageNow=<%=pagenow - 1%>">上一页</a>
                 <% } %>
-            </select>
-            &nbsp;
-            &nbsp;
-            &nbsp;
-            &nbsp;
-            <input type="submit" value="确认"　id="sbutton"/>
+
+                <% if(pagenow - 1 <= 0){ %>
+                <a href="/seat/seatshow?pageNow=1">上一页</a>
+                <% } %>
+
+                <%
+                    int pagecount = pages.getTotalPageCount();
+                    for(int i = 1; i <= pagecount; i++ ){
+
+                %>
+                <a href="/seat/seatshow?pageNow=<%=i%>"><%=i%></a>
+
+                <%}%>
+                <%
+                    if(pagecount == 0){
+                %>
+                <a href="/seat/seatshow?pageNow=<%=pagenow%>">下一页</a>
+                <%
+                    }
+                    if(pagenow + 1 < pagecount){
+                %>
+                <a href="/seat/seatshow?pageNow=<%=pagenow + 1%>">下一页</a>
+                <%
+                    }
+                    if(pagenow + 1 >= pagecount){
+                %>
+                <a href="/seat/seatshow?pageNow=<%=pagecount%>">下一页</a>
+                <% } %>
+                <a href="/seat/seatshow?pageNow=<%=pagecount%>">尾页</a>
 
 
 
-            <div class="container">
-                <div class="container_wrap">
-                    <div class="header_top">
-                        <div class="seats">
-                            <div class="pingmu"><label>影厅荧幕</label></div>
-                            <div id="seat"></div>
-                        </div>
-                        <div class="body_seat">
-                            <div class="yuan">
-                                <div id="kexuan"></div><label>空置的座位</label>
-                            </div>
-                            <div class="yuan">
-                                <div id="use"></div><label>使用的座位</label>
-                            </div>
-                            <div class="yuan">
-                                <div id="huai"></div><label>损坏的座位</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-
     </div>
-    </form>
 </div>
-
-
 <script type="text/javascript" src="/js/jquery-2.2.2.min.js"></script>
-<script type="text/javascript">
-    var set = $("#seat");
 
-    var k = 0;
-    for(var i=0;i < 12;i++)
-    {
-        var seets = $("<div></div>");
-
-
-        for(var j = 0; j< 15;j++)
-        {
-            (function(i,j){
-
-                var a = $("<span></span>");
-                a.addClass("myspan");
-                var seet = $("<span></span>");
-                seet.addClass("seets");
-                a.append(seet);
-                seets.append(a);
-                set.append(seets);
-
-            })(i,j);
-
-        }
-
-    }
-</script>
 </body>
 </html>
+
 

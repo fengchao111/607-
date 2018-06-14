@@ -63,5 +63,16 @@
         select * from seat where studio_id = #{studio_id} and seat_row = #{seat_row} and seat_column = #{seat_column}
     </select>
 
+    <update id="updteSeatList" parameterType="com.ttms.entity.SeatBean">
+        <foreach collection="seatList" item="seat" index="index" open="" close="" separator=";">
+            update seat
+            <set>
+                seat_status=#{seat.seat_status}
+            </set>
+            where seat_row = #{seat.seat_row} AND seat_column=#{seat.seat_column} and
+            studio_id=#{studio_id}
+        </foreach>
+    </update>
+
 
 </mapper>

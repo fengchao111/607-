@@ -24,7 +24,7 @@
     </select>
 
     <select id="Searchbysaleitemid"  parameterType="Sale_item" resultType="Ticket" >
-        select * from ticket where ticket_id=#{sale_item_id}
+        select * from ticket where ticket_id=#{ticket_id}
     </select>
 
 

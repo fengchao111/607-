@@ -3,6 +3,7 @@ package com.ttms.serviceImpl;
 import com.ttms.dao.SeatDAO;
 import com.ttms.dao.StudioDAO;
 import com.ttms.entity.Seat;
+import com.ttms.entity.SeatBean;
 import com.ttms.entity.Studio;
 import com.ttms.service.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,19 @@ public class SeatServiceImpl implements SeatService {
         }
 
         return errors;
+    }
+
+    @Override
+    public void changeSeatList(SeatBean seatBean) {
+        if (seatBean.getSeatList() == null || seatBean.getStudioName() == null || seatBean.getStudioName().equals("")) {
+            System.out.println("seatBean is null");
+        }
+        seatDAO.updteSeatList(seatBean);
+    }
+
+    @Override
+    public List<Seat> selectSeatListByStudioId(int StudioId){
+        return seatDAO.selectSeatByStudio_id(StudioId);
     }
 
 //    @Override
